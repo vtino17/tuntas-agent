@@ -1,0 +1,8 @@
+{
+  "name": "tuntas-fixture",
+  "version": "1.0.0",
+  "release": {
+    "ready": true,
+    "artifacts": ["src/status.txt"]
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "contractVersion": "1.0",
+  "id": "tuntas-release-v1",
+  "goal": "Verify that Tuntas is documented, tested, and ready to build",
+  "createdAt": "2026-07-29T00:00:00.000Z",
+  "claims": [
+    {
+      "id": "readme-quickstart",
+      "statement": "README contains a quick-start guide",
+      "level": "required",
+      "probe": {
+        "type": "file.contains",
+        "path": "README.md",
+        "pattern": "Quick start",
+        "caseSensitive": false
+      }
+    },
+    {
+      "id": "package-test",
+      "statement": "The root package declares the test suite",
+      "level": "required",
+      "probe": {
+        "type": "json.assert",
+        "path": "package.json",
+        "pointer": "/scripts/test",
+        "operator": "equals",
+        "expected": "vitest run"
+      }
+    },
+    {
+      "id": "license",
+      "statement": "An open-source license is present",
+      "level": "required",
+      "probe": {
+        "type": "file.exists",
+        "path": "LICENSE",
+        "kind": "file"
+      }
+    },
+    {
+      "id": "tests-pass",
+      "statement": "The complete automated test suite passes",
+      "level": "required",
+      "probe": {
+        "type": "command.exit",
+        "executable": "pnpm",
+        "args": ["test"],
+        "expectedExitCode": 0,
+        "timeoutMs": 60000
+      }
+    },
+    {
+      "id": "workspace-clean",
+      "statement": "The Git workspace is clean",
+      "level": "advisory",
+      "probe": {
+        "type": "git.clean",
+        "allowUntracked": false
+      }
+    }
+  ],
+  "permissions": {
+    "commands": [
+      {
+        "executable": "pnpm",
+        "argsPrefix": ["test"]
+      }
+    ]
+  },
+  "limits": {
+    "maxTotalMs": 120000,
+    "maxFileBytes": 1000000,
+    "maxOutputBytes": 64000
+  }
+}

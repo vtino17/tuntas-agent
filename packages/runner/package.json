@@ -1,0 +1,21 @@
+{
+  "name": "@tuntas/runner",
+  "version": "0.1.0",
+  "description": "Security-conscious local probe runner for Tuntas outcome contracts.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@tuntas/core": "workspace:*"
+  }
+}

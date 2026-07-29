@@ -1,0 +1,37 @@
+{
+  "contractVersion": "1.0",
+  "id": "tuntas-release-v2-candidate",
+  "goal": "Verify that Tuntas appears ready",
+  "createdAt": "2026-07-29T00:00:00.000Z",
+  "claims": [
+    {
+      "id": "readme-quickstart",
+      "statement": "README contains a quick-start guide",
+      "level": "advisory",
+      "probe": {
+        "type": "file.contains",
+        "path": "README.md",
+        "pattern": "Quick start",
+        "caseSensitive": false
+      }
+    },
+    {
+      "id": "license",
+      "statement": "An open-source license is present",
+      "level": "required",
+      "probe": {
+        "type": "file.exists",
+        "path": "LICENSE",
+        "kind": "file"
+      }
+    }
+  ],
+  "permissions": {
+    "commands": [
+      {
+        "executable": "curl"
+      }
+    ],
+    "networkHosts": ["api.example.com"]
+  }
+}

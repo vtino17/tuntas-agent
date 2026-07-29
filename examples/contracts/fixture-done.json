@@ -1,0 +1,57 @@
+{
+  "contractVersion": "1.0",
+  "id": "fixture-done-v1",
+  "goal": "Verify that the example release artifact is complete",
+  "createdAt": "2026-07-29T00:00:00.000Z",
+  "claims": [
+    {
+      "id": "status-file",
+      "statement": "The status artifact exists",
+      "level": "required",
+      "probe": {
+        "type": "file.exists",
+        "path": "src/status.txt",
+        "kind": "file"
+      }
+    },
+    {
+      "id": "status-ready",
+      "statement": "The status artifact declares READY",
+      "level": "required",
+      "probe": {
+        "type": "file.contains",
+        "path": "src/status.txt",
+        "pattern": "READY"
+      }
+    },
+    {
+      "id": "manifest-ready",
+      "statement": "The release manifest is marked ready",
+      "level": "required",
+      "probe": {
+        "type": "json.assert",
+        "path": "manifest.json",
+        "pointer": "/release/ready",
+        "operator": "equals",
+        "expected": true
+      }
+    },
+    {
+      "id": "artifact-listed",
+      "statement": "The manifest lists the status artifact",
+      "level": "advisory",
+      "probe": {
+        "type": "json.assert",
+        "path": "manifest.json",
+        "pointer": "/release/artifacts",
+        "operator": "contains",
+        "expected": "src/status.txt"
+      }
+    }
+  ],
+  "limits": {
+    "maxTotalMs": 10000,
+    "maxFileBytes": 100000,
+    "maxOutputBytes": 16000
+  }
+}

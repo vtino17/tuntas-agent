@@ -1,0 +1,18 @@
+{
+  "name": "@tuntas/cli",
+  "version": "0.1.0",
+  "description": "Proof-of-done CLI and portable evidence reports for AI agent work.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "tuntas": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@tuntas/core": "workspace:*",
+    "@tuntas/runner": "workspace:*"
+  }
+}
