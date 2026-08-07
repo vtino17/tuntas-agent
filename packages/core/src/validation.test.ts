@@ -28,4 +28,27 @@ describe("contract validation", () => {
     expect(issues.map((issue) => issue.path)).toContain("claims[1].id");
     expect(issues.map((issue) => issue.path)).toContain("claims");
   });
+
+  it("rejects non-finite JSON expectations before contract hashing", () => {
+    const issues = validateContract({
+      contractVersion: "1.0",
+      id: "json-contract",
+      goal: "Validate a numeric limit",
+      createdAt: "2026-08-07T00:00:00.000Z",
+      claims: [{
+        id: "limit",
+        statement: "Limit is finite",
+        level: "required",
+        probe: {
+          type: "json.assert",
+          path: "config.json",
+          pointer: "/limit",
+          operator: "equals",
+          expected: Number.NaN,
+        },
+      }],
+    });
+
+    expect(issues.map((issue) => issue.path)).toContain("claims[0].probe.expected");
+  });
 });
