@@ -21,6 +21,18 @@ function hasText(record: Record<string, unknown>, key: string): boolean {
   return typeof record[key] === "string" && record[key].trim().length > 0;
 }
 
+function isJsonValue(value: unknown, ancestors = new Set<object>()): boolean {
+  if (value === null || typeof value === "string" || typeof value === "boolean") return true;
+  if (typeof value === "number") return Number.isFinite(value);
+  if (typeof value !== "object" || ancestors.has(value)) return false;
+  ancestors.add(value);
+  const valid = Array.isArray(value)
+    ? value.every((entry) => isJsonValue(entry, ancestors))
+    : Object.values(value).every((entry) => isJsonValue(entry, ancestors));
+  ancestors.delete(value);
+  return valid;
+}
+
 function add(
   issues: ValidationIssue[],
   path: string,
@@ -83,6 +95,8 @@ function validateProbe(
     }
     if (probe.operator !== "exists" && probe.expected === undefined) {
       add(issues, `${path}.expected`, `Is required for ${String(probe.operator)}.`);
+    } else if (probe.expected !== undefined && !isJsonValue(probe.expected)) {
+      add(issues, `${path}.expected`, "Must be a JSON-compatible finite value.");
     }
   }
   if (typed.type === "command.exit") {
@@ -245,6 +259,12 @@ export function validateContract(value: unknown): ValidationIssue[] {
         }
       }
     }
+  }
+
+  if (value.metadata !== undefined && !isRecord(value.metadata)) {
+    add(issues, "metadata", "Must be a JSON object.");
+  } else if (value.metadata !== undefined && !isJsonValue(value.metadata)) {
+    add(issues, "metadata", "Must contain only JSON-compatible finite values.");
   }
 
   return issues;
